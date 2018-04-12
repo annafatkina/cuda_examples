@@ -168,8 +168,8 @@ void process_png_file(int dev) {
   std::chrono::time_point<std::chrono::system_clock> start, end;
   start = std::chrono::system_clock::now();
 
-  process(img, alpha, height, width, dev);
- // processCPU(img, alpha, height, width, dev);
+ // process(img, alpha, height, width, dev);
+  processCPU(img, alpha, height, width, dev);
 
  
     end = std::chrono::system_clock::now();

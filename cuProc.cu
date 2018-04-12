@@ -3,27 +3,12 @@
 #define BLOCKSIZE 16
 #define GridSize(size) (size/BLOCKSIZE + 1)
 
-
-__device__ void rough_binarization(int* graylvl, int height, int width) {
-	int x = blockDim.x*blockIdx.x + threadIdx.x;
-        int y = blockDim.y*blockIdx.y + threadIdx.y;
-
-	if (x >= width || y >= height || x < 0 || y < 0) return;
-	graylvl[x + y * width] = (graylvl[x + y * width] == 0 ? 0 : 255);
-}
-
 __global__ void addContours(int* out_gray, int* out_alpha, int* graylvl, int* alpha, /* from original image */
 				int height, int width,  /* size of original image */
 				int deviation /* the width of liminiscence strip */
 				) {
 	int x = blockDim.x*blockIdx.x + threadIdx.x;
   	int y = blockDim.y*blockIdx.y + threadIdx.y;
-//	if (!(x < width && y < height && x > 0 && y > 0)) return;
-	//rough_binarization(graylvl, height, width); 
-	//__shared__ win[blockDim.x*blockDim.y];
-	//int curr = threadIdx.y * blockDim.y + threadIdx.x;
-	// __syncthreads(); /* after rough binarization */    
-	
 	if (alpha[x + y * width] == 0 /* if pixel is transparent */) {
 		int mindev = 2*deviation;
 		for (int i = -deviation ; i <= deviation; i++) {
@@ -43,23 +28,6 @@ __global__ void addContours(int* out_gray, int* out_alpha, int* graylvl, int* al
 		out_alpha[x + y * width] = alpha[x + y * width] ;
                 out_gray[x + y * width] = graylvl[x + y * width];
 	}
-}
-
-__global__ void exs(int* graylvl, int* alpha, /* from original image */
-                                int height, int width,  /* size of original image */
-                                int deviation /* the width of liminiscence strip */
-                                )  {
-
-  int x = blockDim.x*blockIdx.x + threadIdx.x;
-//  int y = blockDim.y*blockIdx.y + threadIdx.y;
-//int x = blockIdx.x*BLOCKSIZE + threadIdx.x;
-//int y = blockIdx.y*BLOCKSIZE + threadIdx.y;
-
-//if ((x < width*height && x > 0 )) {
-  alpha[x] = 128;
-//  graylvl[x] = 128; 
-//}
-
 }
 
 void process(int* img, int* alpha, int height, int width, int dev) {
@@ -104,9 +72,6 @@ void process(int* img, int* alpha, int height, int width, int dev) {
         }
 	
 	addContours<<< dim3(width/BLOCKSIZE, height/BLOCKSIZE), dim3(BLOCKSIZE, BLOCKSIZE) >>>(out_img_dev, out_alpha_dev,img_dev, alpha_dev, height, width, dev);	
-//	exs<<< width*height/BLOCKSIZE , BLOCKSIZE >>>(img_dev, alpha_dev, height, width, dev);	
-std::cout << width << " " << height;
-//	cudaDeviceSynchronize();
 	err = cudaMemcpy(img, out_img_dev, alloc_size, cudaMemcpyDeviceToHost);
         if (err != cudaSuccess) {
                 printf("ERROR: unable to copy d2h!\n");
