@@ -29,7 +29,7 @@ __global__ void addContours(int* out_gray, int* out_alpha, int* graylvl, int* al
 		for (int i = -deviation ; i <= deviation; i++) {
 			for (int j = -deviation  ; j <= deviation ; j++) {
 				if ( x+i >= 0 && x + i < width && y+j >=0 && y+j < height) { 
-					if ( graylvl[x+i + (y+j) * width] < 128) if(mindev > min(abs(i), abs(j))) {
+					if ( graylvl[x+i + (y+j) * width] < 128 && alpha[x+i + (y+j) * width] !=0 && mindev > min(abs(i), abs(j))) {
 						mindev = min(abs(i), abs(j)); 
 					}
 				}

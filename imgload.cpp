@@ -147,7 +147,7 @@ void process_png_file(int dev) {
     for(int x = 0; x < width; x++) {
       png_bytep px = &(row[x * 4]);
       // Do something awesome for each pixel here...
-      // printf("%4d, %4d = RGBA(%3d, %3d, %3d, %3d)\n", x, y, px[0], px[1], px[2], px[3]);
+      printf("%4d, %4d = RGBA(%3d, %3d, %3d, %3d)\n", x, y, px[0], px[1], px[2], px[3]);
 	img[y*width + x] = px[0];
 	alpha[y*width + x] = px[3]; 
     }
