@@ -36,8 +36,8 @@ __global__ void addContours(int* out_gray, int* out_alpha, int* graylvl, int* al
 			}
 		}
 		if (mindev < 2*deviation) {
-			out_alpha[x + y * width] = 255 / (mindev)  ;
-			out_gray[x + y * width] = 255;
+			out_alpha[x + y * width] = 255 / mindev  ;
+			out_gray[x + y * width] = 255 ;
 		}
 	} else {
 		out_alpha[x + y * width] = alpha[x + y * width] ;

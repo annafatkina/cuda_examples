@@ -176,7 +176,7 @@ int main(int argc, char *argv[]) {
   if(argc != 4) abort();
 
   read_png_file(argv[1]);
-  process_png_file(argc);
+  process_png_file(atoi(argv[3]));
   write_png_file(argv[2]);
 
   return 0;
