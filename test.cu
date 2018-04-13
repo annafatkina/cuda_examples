@@ -12,8 +12,8 @@ __global__ void vecAdd(double* res, double* inA, double* inB, size_t n) {
 }
 
 
-int main () {
 
+int main () {
 	int* minGridSize = (int*)malloc(sizeof(int));
 	int* blockSize = (int*)malloc(sizeof(int));
 	cudaError_t err = cudaOccupancyMaxPotentialBlockSize(minGridSize, blockSize, 

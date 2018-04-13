@@ -31,7 +31,7 @@ __global__ void addContours(int* out_gray, int* out_alpha, int* graylvl, int* al
 }
 
 void process(int* img, int* alpha, int height, int width, int dev) {
-	cudaSetDevice(0);
+//	cudaSetDevice(0);
 	cudaError_t err;
 	int* img_dev;
 	int* out_img_dev;
@@ -72,6 +72,7 @@ void process(int* img, int* alpha, int height, int width, int dev) {
         }
 	
 	addContours<<< dim3(width/BLOCKSIZE, height/BLOCKSIZE), dim3(BLOCKSIZE, BLOCKSIZE) >>>(out_img_dev, out_alpha_dev,img_dev, alpha_dev, height, width, dev);	
+	cudaDeviceSynchronize();
 	err = cudaMemcpy(img, out_img_dev, alloc_size, cudaMemcpyDeviceToHost);
         if (err != cudaSuccess) {
                 printf("ERROR: unable to copy d2h!\n");
@@ -86,5 +87,5 @@ void process(int* img, int* alpha, int height, int width, int dev) {
 	cudaFree(img_dev);
 	cudaFree(out_img_dev);
 	cudaFree(out_alpha_dev);
-	cudaDeviceReset();
+//	cudaDeviceReset();
 }
